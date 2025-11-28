@@ -1,17 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Career Blueprint: CV & Interview Mastery</title>
 
-    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;500;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -28,7 +25,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f0f9ff;
             color: var(--text-dark);
-            overflow: hidden; /* Prevent scrolling, handle in slides */
+            overflow: hidden;
             margin: 0;
             padding: 0;
             height: 100vh;
@@ -38,7 +35,6 @@
         h1, h2, h3, h4, .font-heading {
             font-family: 'Oswald', sans-serif;
             text-transform: uppercase;
-            /* Ambient Text Glow */
             text-shadow: 0 4px 10px rgba(30, 64, 175, 0.15), 0 0 20px rgba(255, 255, 255, 0.5);
         }
 
@@ -60,16 +56,12 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
             border-radius: 16px;
-            /* Ambient Card Glow */
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), 
-                        0 0 40px rgba(30, 64, 175, 0.1); 
-            transition: box-shadow 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05), 0 0 40px rgba(30, 64, 175, 0.1); 
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
         
         .glass-panel:hover {
-             /* Stronger Glow on Hover */
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 
-                        0 0 60px rgba(30, 64, 175, 0.2);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 0 60px rgba(30, 64, 175, 0.2);
         }
 
         .btn-primary {
@@ -117,6 +109,7 @@
             flex-direction: column;
             justify-content: center;
             overflow-y: auto;
+            overflow-x: hidden;
         }
 
         .slide.active {
@@ -145,6 +138,15 @@
         }
         .reveal-left { animation: reveal 1s ease forwards; }
         .reveal-right { animation: reveal 1s ease forwards 0.2s; }
+        
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        .animate-blob { animation: blob 7s infinite; }
+        .animation-delay-2000 { animation-delay: 2s; }
 
         /* --- Navigation Rail --- */
         .nav-rail {
@@ -194,30 +196,28 @@
             transform: scale(1.5);
         }
 
-        /* --- Hidden Navigation Zones --- */
+        /* --- Navigation Zones --- */
         .nav-zone {
             position: fixed;
             bottom: 0;
-            width: 200px; /* Hover area width */
-            height: 200px; /* Hover area height */
+            width: 150px; 
+            height: 150px; 
             z-index: 50;
             display: flex;
             align-items: center;
             justify-content: center;
-            /* debug background: rgba(255,0,0,0.1); */
         }
 
         .nav-zone.left { left: 0; justify-content: flex-start; padding-left: 2rem; align-items: flex-end; padding-bottom: 2rem; }
         .nav-zone.right { right: 0; justify-content: flex-end; padding-right: 2rem; align-items: flex-end; padding-bottom: 2rem; }
 
-        /* Premium Glass Button Style */
         .nav-glass-btn {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            color: #1e40af; /* Primary Blue */
+            color: #1e40af; 
             padding: 1.5rem;
             border-radius: 50%;
             cursor: pointer;
@@ -245,70 +245,51 @@
         ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
-        /* Video Background Utilities */
-        .video-bg-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
-            opacity: 0.15;
-            filter: grayscale(100%);
-            background: #0f172a; /* Fallback */
+        /* Custom Utils */
+        .bdjobs-logo-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            font-size: 5rem;
+            letter-spacing: -2px;
+            color: #d32f2f; 
         }
-        
-        .placeholder-img {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #e2e8f0;
-            color: #64748b;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
+        .bdjobs-logo-text span { color: #1e40af; }
     </style>
 </head>
 
 <body>
 
-    <!-- 3D Background -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Slide Counter (Centered) -->
     <div class="fixed bottom-8 left-1/2 -translate-x-1/2 font-mono text-slate-400 z-40 text-xl font-bold glass-panel px-4 py-2">
         <span id="page-num" class="text-blue-600">01</span> / <span id="total-slides">51</span>
     </div>
 
-    <!-- Branding -->
     <div class="fixed top-8 left-8 z-40 flex items-center gap-4 anim-float">
-        <img id="img-hrp-logo" src="./assets/hrp_logo.png" alt="HR Perception" class="w-12 h-12 rounded-lg shadow-lg object-contain bg-white">
+        <img id="img-hrp-logo" src="./assets/hrp_logo.png" alt="HR Perception" class="w-12 h-12 rounded-lg shadow-lg object-contain bg-white" onerror="this.src='https://placehold.co/100x100?text=HRP'">
         <div class="leading-tight">
-            <div id="branding-text" class="text-lg font-bold text-slate-800 font-heading">HR Perception - HRP</div>
+            <div id="branding-text" class="text-lg font-bold font-heading text-slate-800">HR Perception - HRP</div>
         </div>
     </div>
 
-    <!-- Navigation Rail -->
     <div class="nav-rail" id="nav-rail"></div>
 
-    <!-- MAIN SLIDES CONTAINER -->
     <div id="slides-container">
 
-        <!-- Slide 1: Title -->
         <div class="slide active">
-            <div class="max-w-6xl mx-auto text-center relative z-10">
-                <!-- Logo: As-is, no border -->
-                <img id="img-uni-logo" src="./assets/university_logo.png" alt="University Logo" class="h-40 mx-auto mb-8 object-contain drop-shadow-lg" onerror="this.style.display='none'">
+            <div class="max-w-6xl mx-auto text-center relative z-10 w-full">
+                <img id="img-uni-logo" src="./assets/university_logo.png" alt="University Logo" class="h-32 md:h-40 mx-auto mb-8 object-contain drop-shadow-lg" onerror="this.style.display='none'">
                 
-                <div class="mb-8 inline-block px-8 py-2 bg-blue-50 text-blue-800 rounded-full text-sm font-bold tracking-widest uppercase border border-blue-200" style="font-size: 22px;">
+                <div class="mb-8 inline-block px-8 py-2 bg-blue-50 text-blue-800 rounded-full text-sm font-bold tracking-widest uppercase border border-blue-200 text-xl">
                     Mawlana Bhashani Science and Technology University
                 </div>
-                <h1 class="text-6xl md:text-8xl font-bold text-slate-900 mb-8 leading-none tracking-tight">
+                <h1 class="text-5xl md:text-8xl font-bold text-slate-900 mb-8 leading-none tracking-tight">
                     <span class="text-blue-700">CV WRITING</span>, JOB APPLICATION<br>
                     <span class="text-orange-500 to-red-500">& INTERVIEW TECHNIQUES</span>
                 </h1>
-                <p class="text-2xl text-slate-500 font-light uppercase tracking-[0.2em] mb-12" style="font-family: serif; color: rgb(0, 0, 0);">Department of Management</p>
+                <p class="text-xl md:text-2xl text-slate-500 font-light uppercase tracking-[0.2em] mb-12 font-serif text-black">
+                    Department of Management
+                </p>
                 <button onclick="nextSlide()" class="btn-primary group">
                     Start Session
                     <i class="fas fa-arrow-right ml-3 group-hover:translate-x-1 transition-transform"></i>
@@ -316,20 +297,19 @@
             </div>
         </div>
 
-        <!-- Slide 2: The Speaker -->
         <div class="slide">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-center max-w-7xl mx-auto w-full">
                 <div class="relative group">
                     <div class="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-2xl transform rotate-3 transition group-hover:rotate-6"></div>
                     <div class="glass-panel p-2 relative bg-white">
-                        <img id="img-speaker" src="./assets/speaker.jpg" alt="Siraj Uddin" class="w-full rounded-xl shadow-inner object-cover h-[500px]" onerror="this.src='https://placehold.co/600x800/e2e8f0/1e40af?text=Speaker+Photo'">
+                        <img id="img-speaker" src="./assets/speaker.jpg" alt="Siraj Uddin" class="w-full rounded-xl shadow-inner object-cover h-[400px] md:h-[500px]" onerror="this.src='https://placehold.co/600x800/e2e8f0/1e40af?text=Speaker+Photo'">
                     </div>
                 </div>
                 <div>
-                    <h2 class="text-7xl text-slate-900 mb-2 font-heading" style="font-size: 55px;">THE SPEAKER</h2>
+                    <h2 class="text-5xl md:text-7xl text-slate-900 mb-2 font-heading">THE SPEAKER</h2>
                     <div class="h-2 w-24 bg-orange-500 mb-8"></div>
-                    <h3 class="text-4xl text-blue-700 font-bold mb-8" style="font-size: 42px;">Siraj Uddin Chowdhury Rubel</h3>
-                    <ul class="space-y-6 text-slate-700 text-lg">
+                    <h3 class="text-3xl md:text-4xl text-blue-700 font-bold mb-8">Siraj Uddin Chowdhury Rubel</h3>
+                    <ul class="space-y-4 md:space-y-6 text-slate-700 text-lg">
                         <li class="flex items-start">
                             <span class="bg-blue-100 p-2 rounded mr-4 text-blue-600"><i class="fas fa-graduation-cap"></i></span>
                             <div><strong>Education:</strong> BBA, MBA (DU), MPHRM (DU), HRMC (IBA), PGDHRM (BIM)</div>
@@ -342,16 +322,23 @@
                             <span class="bg-green-100 p-2 rounded mr-4 text-green-600"><i class="fas fa-building"></i></span>
                             <div><strong>Founder & CEO:</strong> HR Perception Consultancy & Facilitation</div>
                         </li>
+                        <li class="flex items-start">
+                            <span class="bg-purple-100 p-2 rounded mr-4 text-purple-600"><i class="fas fa-id-card-alt"></i></span>
+                            <div>
+                                <strong>Experience:</strong><br>
+                                HR Advisor, Global Connection Tours & Travels<br>
+                                Former HR Manager, Abdul Monem Ltd.
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: Quote -->
         <div class="slide">
-            <div class="max-w-6xl mx-auto text-center">
-                <i class="fas fa-quote-left text-8xl text-orange-200 mb-10 block animate-bounce"></i>
-                <h2 class="text-6xl md:text-7xl font-light text-slate-800 leading-tight mb-10">
+            <div class="max-w-6xl mx-auto text-center w-full">
+                <i class="fas fa-quote-left text-6xl md:text-8xl text-orange-200 mb-10 block animate-bounce"></i>
+                <h2 class="text-4xl md:text-7xl font-light text-slate-800 leading-tight mb-10">
                     "Success consists of going from <span class="font-bold text-orange-600">failure to failure</span> without loss of enthusiasm."
                 </h2>
                 <div class="inline-flex items-center justify-center gap-4 opacity-70">
@@ -362,69 +349,63 @@
             </div>
         </div>
 
-        <!-- Slide 4: Intro Topic -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center h-full">
-                <div class="glass-panel p-20 text-center border-t-8 border-blue-600 shadow-2xl">
-                    <div class="mb-8 w-32 h-32 bg-blue-100 rounded-full flex items-center justify-center mx-auto text-blue-600 text-6xl">
+            <div class="flex flex-col items-center justify-center h-full w-full">
+                <div class="glass-panel p-10 md:p-20 text-center border-t-8 border-blue-600 shadow-2xl">
+                    <div class="mb-8 w-24 h-24 md:w-32 md:h-32 bg-blue-100 rounded-full flex items-center justify-center mx-auto text-blue-600 text-4xl md:text-6xl">
                         <i class="far fa-file-alt"></i>
                     </div>
-                    <h2 class="text-8xl text-slate-900 font-heading mb-4">CV or RESUME</h2>
-                    <p class="text-3xl text-slate-500 font-light italic">What to Say?</p>
+                    <h2 class="text-5xl md:text-8xl text-slate-900 font-heading mb-4">CV or RESUME</h2>
+                    <p class="text-2xl md:text-4xl text-blue-600 font-light italic font-bold">What to Say?</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: CV Sample Images (Front & Back) -->
         <div class="slide">
-            <div class="flex justify-center items-center gap-8 h-full w-full p-8">
-                <!-- Front Page -->
-                <div class="h-[85vh] w-[45%] bg-white shadow-2xl rounded-lg overflow-hidden border border-slate-200 transform hover:scale-[1.02] transition duration-300">
-                     <img src="https://placehold.co/600x850/e2e8f0/1e293b?text=CV+Front+Page" class="w-full h-full object-fill" alt="CV Front Page">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 h-full w-full p-8">
+                <div class="h-[60vh] md:h-[85vh] w-full md:w-[45%] bg-white shadow-2xl rounded-lg overflow-hidden border border-slate-200 transform hover:scale-[1.02] transition duration-300">
+                     <img src="./assets/cv_front.png" class="w-full h-full object-contain" alt="CV Front Page">
                 </div>
-                <!-- Back Page -->
-                <div class="h-[85vh] w-[45%] bg-white shadow-2xl rounded-lg overflow-hidden border border-slate-200 transform hover:scale-[1.02] transition duration-300">
-                     <img src="https://placehold.co/600x850/e2e8f0/1e293b?text=CV+Back+Page" class="w-full h-full object-fill" alt="CV Back Page">
+                <div class="h-[60vh] md:h-[85vh] w-full md:w-[45%] bg-white shadow-2xl rounded-lg overflow-hidden border border-slate-200 transform hover:scale-[1.02] transition duration-300">
+                     <img src="./assets/cv_back.png" class="w-full h-full object-contain" alt="CV Back Page">
                 </div>
             </div>
         </div>
 
-        <!-- Slide 6: CV Profile Modern -->
         <div class="slide">
             <div class="max-w-6xl mx-auto w-full">
-                <h2 class="text-5xl text-slate-900 mb-10 font-heading border-l-8 border-orange-500 pl-8">START UP PROFILE</h2>
-                <div class="glass-panel p-12 grid grid-cols-2 gap-12 relative overflow-hidden">
-                    <i class="fas fa-user-circle absolute -right-20 -bottom-20 text-[20rem] text-slate-100 z-0"></i>
-                    <div class="relative z-10 text-center border-r-2 border-slate-200 pr-8 flex flex-col justify-center">
-                        <div class="w-48 h-48 bg-gray-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden">
-                            <img id="img-profile-startup" src="https://placehold.co/200x200/cbd5e1/64748b?text=Profile" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/cbd5e1/64748b?text=Profile'">
+                <h2 class="text-4xl md:text-5xl text-slate-900 mb-10 font-heading border-l-8 border-orange-500 pl-8">START UP PROFILE</h2>
+                <div class="glass-panel p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-12 relative overflow-hidden">
+                    <i class="fas fa-user-circle absolute -right-20 -bottom-20 text-[10rem] md:text-[20rem] text-slate-100 z-0"></i>
+                    <div class="relative z-10 text-center border-b-2 md:border-b-0 md:border-r-2 border-slate-200 pr-0 md:pr-8 flex flex-col justify-center pb-8 md:pb-0">
+                        <div class="w-32 h-32 md:w-48 md:h-48 bg-gray-200 rounded-full mx-auto mb-6 flex items-center justify-center overflow-hidden">
+                            <img id="img-profile-startup" src="https://placehold.co/200x200/cbd5e1/64748b?text=Profile" class="w-full h-full object-cover">
                         </div>
-                        <h3 class="text-4xl font-bold mt-4">SWORNA DAS</h3>
+                        <h3 class="text-3xl md:text-4xl font-bold mt-4">SWORNA DAS</h3>
                         <p class="text-blue-600 text-xl mt-2 tracking-widest uppercase">MBA in Marketing</p>
                     </div>
                     <div class="relative z-10 space-y-6 flex flex-col justify-center">
                         <div class="p-6 bg-white/80 rounded-lg shadow-sm border border-slate-100">
                             <strong class="text-blue-800 block text-xs mb-1 uppercase tracking-wider font-bold">NAME</strong>
-                            <span class="text-xl">Full Name</span>
+                            <span class="text-xl md:text-2xl">Full Name</span>
                         </div>
                         <div class="p-6 bg-white/80 rounded-lg shadow-sm border border-slate-100">
                             <strong class="text-blue-800 block text-xs mb-1 uppercase tracking-wider font-bold">ADDRESS</strong>
-                            <span class="text-xl">Present Address</span>
+                            <span class="text-xl md:text-2xl">Present Address</span>
                         </div>
                         <div class="p-6 bg-white/80 rounded-lg shadow-sm border border-slate-100">
                             <strong class="text-blue-800 block text-xs mb-1 uppercase tracking-wider font-bold">CONTACT</strong>
-                            <span class="text-xl">Digital + Social Media</span>
+                            <span class="text-xl md:text-2xl">Digital + Social Media</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: Career Objective Logic -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center text-center max-w-6xl mx-auto">
-                <i class="fas fa-crosshairs text-7xl text-red-500 mb-8"></i>
-                <h2 class="text-7xl text-slate-900 font-heading mb-12">CAREER OBJECTIVE</h2>
+            <div class="flex flex-col items-center justify-center text-center max-w-6xl mx-auto w-full">
+                <i class="fas fa-crosshairs text-5xl md:text-7xl text-red-500 mb-8"></i>
+                <h2 class="text-5xl md:text-7xl text-slate-900 font-heading mb-12">CAREER OBJECTIVE</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full mb-12">
                     <div class="glass-panel p-8 transform hover:scale-105 transition duration-300">
                         <div class="text-4xl mb-4">🎯</div>
@@ -441,44 +422,17 @@
                 </div>
                 <div class="p-10 bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-xl w-full shadow-lg relative">
                     <i class="fas fa-quote-left absolute top-4 left-4 text-blue-200 text-4xl"></i>
-                    <p class="text-3xl italic text-slate-700 leading-relaxed font-serif relative z-10" style="font-size: 40px; font-family: sans-serif;">
+                    <p class="text-2xl md:text-4xl italic text-slate-700 leading-relaxed relative z-10 font-sans">
                         "To be an Executive in any reputed company and grow with increasing responsibilities."
                     </p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 8: Career Summary -->
         <div class="slide">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-7xl text-slate-900 mb-12 font-heading">CAREER SUMMARY</h2>
-                <div class="glass-panel p-16 relative overflow-hidden group">
-                    <div class="absolute -right-10 -top-10 text-[15rem] text-slate-50 opacity-50 transition-transform group-hover:rotate-12">
-                        <i class="fas fa-pencil-alt"></i>
-                    </div>
-                    <ul class="space-y-10 text-3xl text-slate-700 relative z-10">
-                        <li class="flex items-center" style="font-size: 40px;">
-                            <span class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-6 text-xl"><i class="fas fa-check"></i></span>
-                            A snapshot of skills and expertise.
-                        </li>
-                        <li class="flex items-center" style="font-size: 40px;">
-                            <span class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-6 text-xl"><i class="fas fa-check"></i></span>
-                            A one-sentence meaningful description.
-                        </li>
-                    </ul>
-                    <div class="mt-12 p-8 bg-blue-50 rounded-r-2xl border-l-8 border-blue-600">
-                        <p class="text-2xl font-bold text-blue-800" style="font-size: 30px;">1. Where have you done?</p>
-                        <p class="text-2xl font-bold text-blue-800 mt-2" style="font-size: 30px;">2. What have you done?</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 9: Quiz 1 -->
-        <div class="slide">
-            <div class="glass-panel p-16 max-w-5xl mx-auto text-center border-t-8 border-orange-400 shadow-2xl">
-                <div class="inline-block px-6 py-2 bg-orange-100 text-orange-700 rounded-full font-bold mb-8" style="font-size: 30px;">QUIZ TIME</div>
-                <p class="text-4xl text-slate-800 mb-12 font-bold">What was the name of the girl whose CV has been shown to you?</p>
+            <div class="glass-panel p-8 md:p-16 max-w-5xl mx-auto text-center border-t-8 border-orange-400 shadow-2xl w-full">
+                <div class="inline-block px-6 py-2 bg-orange-100 text-orange-700 rounded-full font-bold mb-8 text-2xl md:text-3xl">QUIZ TIME</div>
+                <p class="text-2xl md:text-4xl text-slate-800 mb-12 font-bold">What was the name of the person whose CV was just shown?</p>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <button onclick="checkAnswer(this, false)" class="quiz-btn p-8 bg-white rounded-xl shadow border border-slate-100 hover:bg-slate-50 font-bold text-2xl text-slate-600 transition-all">1. Swanchita</button>
                     <button onclick="checkAnswer(this, true)" data-correct="true" class="quiz-btn p-8 bg-white rounded-xl shadow border border-slate-100 hover:bg-slate-50 font-bold text-2xl text-slate-600 transition-all">2. Sworna</button>
@@ -487,45 +441,72 @@
             </div>
         </div>
 
-        <!-- Slide 10: Summary Example -->
         <div class="slide">
-            <h2 class="text-5xl text-slate-900 mb-8 font-heading text-center">SUMMARY EXAMPLE</h2>
-            <div class="bg-white p-12 rounded-xl shadow-2xl max-w-6xl mx-auto border-t-8 border-blue-600">
-                <h3 class="text-3xl font-bold text-slate-800 mb-6 uppercase tracking-wider text-blue-700">Marketing Professional</h3>
-                <p class="text-2xl text-slate-700 leading-loose text-justify font-light" style="font-size: 28px;">
+            <div class="max-w-6xl mx-auto w-full">
+                <h2 class="text-5xl md:text-7xl text-slate-900 mb-12 font-heading">CAREER SUMMARY</h2>
+                <div class="glass-panel p-8 md:p-16 relative overflow-hidden group">
+                    <div class="absolute -right-10 -top-10 text-[10rem] md:text-[15rem] text-slate-50 opacity-50 transition-transform group-hover:rotate-12">
+                        <i class="fas fa-pencil-alt"></i>
+                    </div>
+                    <ul class="space-y-10 text-2xl md:text-4xl text-slate-700 relative z-10">
+                        <li class="flex items-center">
+                            <span class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-6 text-xl flex-shrink-0"><i class="fas fa-check"></i></span>
+                            A snapshot of skills and expertise.
+                        </li>
+                        <li class="flex items-center">
+                            <span class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-6 text-xl flex-shrink-0"><i class="fas fa-check"></i></span>
+                            A one-sentence meaningful description.
+                        </li>
+                    </ul>
+                    <div class="mt-12 p-8 bg-blue-50 rounded-r-2xl border-l-8 border-blue-600">
+                        <p class="text-2xl md:text-3xl font-bold text-blue-800">1. Where have you worked?</p>
+                        <p class="text-2xl md:text-3xl font-bold text-blue-800 mt-2">2. What have you done?</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2 class="text-4xl md:text-5xl text-slate-900 mb-8 font-heading text-center">SUMMARY EXAMPLE</h2>
+            <div class="bg-white p-8 md:p-12 rounded-xl shadow-2xl max-w-6xl mx-auto border-t-8 border-blue-600 w-full">
+                <h3 class="text-2xl md:text-3xl font-bold text-slate-800 mb-6 uppercase tracking-wider text-blue-700">Marketing Professional</h3>
+                <p class="text-xl md:text-3xl text-slate-700 leading-loose text-justify font-light">
                     Dynamic and motivated professional with a proven record of generating and building relationships, managing projects from concept to completion, designing educational strategies, and coaching individuals to success. Skilled in building cross-functional teams, demonstrating exceptional communication skills, and making critical decisions.
                 </p>
             </div>
         </div>
 
-        <!-- Slide 11: Experience LIFO -->
         <div class="slide">
-            <div class="grid grid-cols-12 gap-10 max-w-7xl mx-auto h-full items-center">
-                <div class="col-span-12 md:col-span-4 text-right">
-                    <div class="text-9xl text-slate-100 font-heading absolute left-10 top-20 -z-10">EXP</div>
-                    <h2 class="text-7xl font-heading text-blue-800 mb-2 relative" style="font-size: 70px;">EXPERIENCE</h2>
-                    <p class="text-4xl text-orange-500 font-bold tracking-widest" style="font-size: 52px;"><div><span style="letter-spacing: 0.1em;">LIFO</span></div></p>
-                    <p class="text-xl text-slate-400 mt-4 uppercase font-bold tracking-wider" style="font-size: 27px; color: rgb(55, 56, 57);">Last In, First Out</p>
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-10 max-w-7xl mx-auto h-full items-center w-full">
+                <div class="col-span-1 md:col-span-4 text-center md:text-right relative">
+                    <div class="text-9xl text-slate-100 font-heading absolute left-10 top-20 -z-10 hidden md:block">EXP</div>
+                    <h2 class="text-5xl md:text-7xl font-heading text-blue-800 mb-2">EXPERIENCE</h2>
+                    <p class="text-3xl md:text-5xl text-orange-500 font-bold tracking-widest">LIFO</p>
+                    <p class="text-2xl text-slate-500 mt-4 uppercase font-bold tracking-wider">Chronography</p>
+                    <p class="text-xl text-orange-600 mt-1 uppercase font-bold tracking-wider">Last In, First Out</p>
                 </div>
-                <div class="col-span-12 md:col-span-8 space-y-8 relative">
-                    <!-- Timeline Line -->
-                    <div class="absolute left-0 top-4 bottom-4 w-1 bg-slate-200 rounded"></div>
+                <div class="col-span-1 md:col-span-8 space-y-8 relative">
+                    <div class="absolute left-0 top-4 bottom-4 w-1 bg-slate-200 rounded hidden md:block"></div>
 
-                    <div class="glass-panel p-8 ml-8 relative">
-                        <div class="absolute -left-[42px] top-8 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow"></div>
-                        <div class="flex justify-between font-bold text-slate-800 text-2xl mb-2"><span>LIVE-IN NANNY</span> <span class="text-green-600">Present</span></div>
-                        <div class="text-xl text-slate-500 mb-4 italic font-serif">The Brown Family, New York</div>
-                        <ul class="list-disc pl-6 text-xl text-slate-700 space-y-2">
+                    <div class="glass-panel p-6 md:p-8 ml-0 md:ml-8 relative">
+                        <div class="hidden md:block absolute -left-[42px] top-8 w-6 h-6 bg-green-500 rounded-full border-4 border-white shadow"></div>
+                        <div class="flex flex-col md:flex-row justify-between font-bold text-slate-800 text-xl md:text-2xl mb-2">
+                            <span>LIVE-IN NANNY</span> <span class="text-green-600">Present</span>
+                        </div>
+                        <div class="text-lg md:text-xl text-slate-500 mb-4 italic font-serif">The Brown Family, New York</div>
+                        <ul class="list-disc pl-6 text-lg md:text-xl text-slate-700 space-y-2">
                             <li>Care for two boys, aged 2 and 4.</li>
                             <li>Prepare balanced nutrition meals.</li>
                         </ul>
                     </div>
 
-                    <div class="glass-panel p-8 ml-8 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition duration-500 relative">
-                        <div class="absolute -left-[42px] top-8 w-6 h-6 bg-slate-400 rounded-full border-4 border-white shadow"></div>
-                        <div class="flex justify-between font-bold text-slate-800 text-2xl mb-2"><span>NANNY</span> <span class="">2010 - 2014</span></div>
-                        <div class="text-xl text-slate-500 mb-4 italic font-serif">The Leigh Family, NY</div>
-                        <ul class="list-disc pl-6 text-xl text-slate-700">
+                    <div class="glass-panel p-6 md:p-8 ml-0 md:ml-8 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition duration-500 relative">
+                        <div class="hidden md:block absolute -left-[42px] top-8 w-6 h-6 bg-slate-400 rounded-full border-4 border-white shadow"></div>
+                        <div class="flex flex-col md:flex-row justify-between font-bold text-slate-800 text-xl md:text-2xl mb-2">
+                            <span>NANNY</span> <span>2010 - 2014</span>
+                        </div>
+                        <div class="text-lg md:text-xl text-slate-500 mb-4 italic font-serif">The Leigh Family, NY</div>
+                        <ul class="list-disc pl-6 text-lg md:text-xl text-slate-700">
                             <li>Resulted in 35% improvement in grades.</li>
                         </ul>
                     </div>
@@ -533,18 +514,16 @@
             </div>
         </div>
 
-        <!-- Slide 12: Education Hierarchy -->
         <div class="slide">
             <div class="max-w-6xl mx-auto text-center w-full">
-                <h2 class="text-6xl font-heading mb-16">EDUCATION HIERARCHY</h2>
+                <h2 class="text-4xl md:text-6xl font-heading mb-16">EDUCATION HIERARCHY</h2>
                 <div class="flex flex-col gap-4 items-center w-full max-w-3xl mx-auto">
-                    <!-- Pyramid Steps -->
-                    <div class="w-full p-6 bg-blue-900 text-white font-bold text-3xl rounded-t-xl shadow-2xl z-40 transform hover:scale-105 transition">MASTERS / HIGHEST DEGREE</div>
-                    <div class="w-[90%] p-5 bg-blue-800 text-white font-bold text-2xl shadow-xl z-30 opacity-90">BACHELOR</div>
-                    <div class="w-[80%] p-4 bg-blue-700 text-white font-bold text-2xl shadow-lg z-20 opacity-80">HSC / A-LEVEL</div>
-                    <div class="w-[70%] p-4 bg-blue-600 text-white font-bold text-2xl rounded-b-xl shadow z-10 opacity-70">SSC / O-LEVEL</div>
+                    <div class="w-full p-6 bg-blue-900 text-white font-bold text-xl md:text-3xl rounded-t-xl shadow-2xl z-40 transform hover:scale-105 transition">MASTERS / HIGHEST DEGREE</div>
+                    <div class="w-[90%] p-5 bg-blue-800 text-white font-bold text-lg md:text-2xl shadow-xl z-30 opacity-90">BACHELOR</div>
+                    <div class="w-[80%] p-4 bg-blue-700 text-white font-bold text-lg md:text-2xl shadow-lg z-20 opacity-80">HSC / A-LEVEL</div>
+                    <div class="w-[70%] p-4 bg-blue-600 text-white font-bold text-lg md:text-2xl rounded-b-xl shadow z-10 opacity-70">SSC / O-LEVEL</div>
                 </div>
-                <div class="mt-16 text-2xl text-slate-500 font-bold border-t border-slate-300 pt-8 flex justify-center gap-8">
+                <div class="mt-16 text-lg md:text-2xl text-slate-500 font-bold border-t border-slate-300 pt-8 flex flex-wrap justify-center gap-4 md:gap-8">
                     <span><i class="fas fa-check text-green-500"></i> Degree</span>
                     <span><i class="fas fa-check text-green-500"></i> Institute</span>
                     <span><i class="fas fa-check text-green-500"></i> Result</span>
@@ -553,20 +532,20 @@
             </div>
         </div>
 
-        <!-- Slide 13: Training & Activities -->
         <div class="slide">
-            <div class="grid grid-cols-2 gap-16 max-w-7xl mx-auto">
-                <div class="glass-panel p-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 max-w-7xl mx-auto w-full">
+                <div class="glass-panel p-8 md:p-10">
                     <h3 class="text-3xl font-bold text-blue-700 mb-6 font-heading"><i class="fas fa-certificate mr-3"></i> TRAINING</h3>
-                    <ul class="space-y-4 text-2xl text-slate-700">
-                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i> TOT (Training of Teachers)</li>
-                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i> LIFO Method</li>
-                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i> S.M.A.R.T Goals</li>
+                    <ul class="space-y-4 text-xl md:text-2xl text-slate-700">
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i> LIFO</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i> Detail</li>
+                        <li><i class="fas fa-check-circle text-green-500 mr-3"></i> S.M.A.R.T</li>
+                         <li><i class="fas fa-check-circle text-green-500 mr-3"></i> TOT</li>
                     </ul>
                 </div>
-                <div class="glass-panel p-10">
+                <div class="glass-panel p-8 md:p-10">
                     <h3 class="text-3xl font-bold text-orange-600 mb-6 font-heading"><i class="fas fa-running mr-3"></i> EXTRA CURRICULAR</h3>
-                    <ul class="space-y-4 text-2xl text-slate-700">
+                    <ul class="space-y-4 text-xl md:text-2xl text-slate-700">
                         <li><i class="fas fa-star text-orange-400 mr-3"></i> Debate Club</li>
                         <li><i class="fas fa-star text-orange-400 mr-3"></i> Event Organization</li>
                         <li><i class="fas fa-star text-orange-400 mr-3"></i> Volunteering</li>
@@ -575,76 +554,86 @@
             </div>
         </div>
 
-        <!-- Slide 14: Quiz 2 -->
         <div class="slide">
-            <div class="glass-panel p-16 max-w-5xl mx-auto text-center border-4 border-red-400">
-                <h2 class="text-5xl text-red-600 font-bold mb-10">TRUE OR FALSE?</h2>
-                <p class="text-3xl text-slate-800 mb-12 font-bold leading-snug">"Internship information does not carry any value addition in the CV?"</p>
-                <div class="flex justify-center gap-12">
+            <div class="glass-panel p-8 md:p-16 max-w-5xl mx-auto text-center border-4 border-red-400 w-full">
+                <h2 class="text-4xl md:text-5xl text-red-600 font-bold mb-10">TRUE OR FALSE?</h2>
+                <p class="text-2xl md:text-3xl text-slate-800 mb-12 font-bold leading-snug">"Internship information does not carry any value addition in the CV?"</p>
+                <div class="flex flex-col md:flex-row justify-center gap-6 md:gap-12">
                     <button onclick="checkAnswer(this, false)" class="quiz-btn px-12 py-6 bg-white rounded-xl shadow-lg hover:bg-red-50 text-3xl font-bold text-slate-500 transition-all">1. True</button>
                     <button onclick="checkAnswer(this, true)" data-correct="true" class="quiz-btn px-12 py-6 bg-white rounded-xl shadow-lg hover:bg-green-50 text-3xl font-bold text-slate-500 transition-all">2. False</button>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 15: Skills Matrix -->
         <div class="slide">
-            <h2 class="text-7xl text-center font-heading mb-16">SKILLS MATRIX</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-7xl mx-auto">
-                <div class="glass-panel p-10 text-center transform hover:-translate-y-4 transition duration-300">
-                    <div class="w-24 h-24 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl"><i class="fas fa-laptop-code"></i></div>
-                    <h3 class="font-bold text-3xl mb-4 text-slate-800">COMPUTER</h3>
-                    <p class="text-xl text-slate-600">Word, Excel, PowerPoint, Internet Research</p>
+            <h2 class="text-5xl md:text-8xl text-center font-heading mb-16">SKILLS MATRIX</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-7xl mx-auto w-full">
+                <div class="flex flex-col items-center">
+                    <div class="glass-panel p-6 text-center transform hover:-translate-y-4 transition duration-300 w-full mb-4">
+                        <div class="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fas fa-laptop-code"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-slate-800">COMPUTER</h3>
+                    </div>
+                    <div class="text-2xl text-slate-800 font-bold font-heading">Specific</div>
                 </div>
-                <div class="glass-panel p-10 text-center transform hover:-translate-y-4 transition duration-300">
-                    <div class="w-24 h-24 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl"><i class="fas fa-language"></i></div>
-                    <h3 class="font-bold text-3xl mb-4 text-slate-800">LANGUAGE</h3>
-                    <p class="text-xl text-slate-600">English (Proficient)<br>Bengali (Native)</p>
+
+                <div class="flex flex-col items-center">
+                    <div class="glass-panel p-6 text-center transform hover:-translate-y-4 transition duration-300 w-full mb-4">
+                        <div class="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fas fa-language"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-slate-800">LANGUAGE</h3>
+                    </div>
+                    <div class="text-2xl text-slate-800 font-bold font-heading">Specific</div>
                 </div>
-                <div class="glass-panel p-10 text-center transform hover:-translate-y-4 transition duration-300">
-                    <div class="w-24 h-24 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl"><i class="fas fa-lightbulb"></i></div>
-                    <h3 class="font-bold text-3xl mb-4 text-slate-800">INTERESTS</h3>
-                    <p class="text-xl text-slate-600">Traveling, Reading, Networking</p>
+
+                <div class="flex flex-col items-center">
+                    <div class="glass-panel p-6 text-center transform hover:-translate-y-4 transition duration-300 w-full mb-4">
+                        <div class="w-16 h-16 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fas fa-lightbulb"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-slate-800">INTERESTS</h3>
+                    </div>
+                    <div class="text-2xl text-slate-800 font-bold font-heading">Realistic</div>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div class="glass-panel p-6 text-center transform hover:-translate-y-4 transition duration-300 w-full mb-4">
+                        <div class="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl"><i class="fas fa-puzzle-piece"></i></div>
+                        <h3 class="font-bold text-xl mb-2 text-slate-800">SKILLS</h3>
+                    </div>
+                    <div class="text-2xl text-slate-800 font-bold font-heading">Realistic</div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 16: Personal Info & Ref -->
         <div class="slide">
-            <div class="grid grid-cols-2 gap-16 max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-7xl mx-auto w-full">
                 <div>
-                    <h3 class="text-4xl font-heading text-slate-900 mb-8 border-b-4 border-blue-500 inline-block pb-2" style="font-size: 40px;">PERSONAL INFO</h3>
+                    <h3 class="text-4xl font-heading text-slate-900 mb-8 border-b-4 border-blue-500 inline-block pb-2">PERSONAL INFO</h3>
                     <div class="bg-white p-8 rounded-xl shadow-md space-y-4 font-mono text-xl text-slate-700">
-                        <p><span class="font-bold text-slate-900" style="font-size: 24px;">Father's Name:</span> ...</p>
-                        <p><span class="font-bold text-slate-900" style="font-size: 24px;">Mother's Name:</span> ...</p>
-                        <p><span class="font-bold text-slate-900" style="font-size: 24px;">Date of Birth:</span> ...</p>
-                        <p><span class="font-bold text-slate-900" style="font-size: 24px;">NID:</span> ...</p>
+                        <p><span class="font-bold text-slate-900">Father's Name:</span> ...</p>
+                        <p><span class="font-bold text-slate-900">Mother's Name:</span> ...</p>
+                        <p><span class="font-bold text-slate-900">Date of Birth:</span> ...</p>
+                        <p><span class="font-bold text-slate-900">NID:</span> ...</p>
                     </div>
                 </div>
                 <div>
-                    <h3 class="text-4xl font-heading text-slate-900 mb-8 border-b-4 border-red-500 inline-block pb-2" style="font-size: 40px;">REFERENCES</h3>
+                    <h3 class="text-4xl font-heading text-slate-900 mb-8 border-b-4 border-red-500 inline-block pb-2">REFERENCES</h3>
                     <div class="bg-white p-8 rounded-xl shadow-md border-l-8 border-red-500">
-                        <p class="font-bold text-2xl mb-6 text-red-600" style="font-size: 28px;">Before adding a referee, ask:</p>
+                        <p class="font-bold text-2xl mb-6 text-red-600">Before adding a referee, ask:</p>
                         <ul class="space-y-4 text-xl">
-                            <li class="" style="font-size: 24px;">1. Do you know him?</li>
-                            <li class="" style="font-size: 24px;">2. Does he know you?</li>
-                            <li class="" style="font-size: 24px;">3. Have you informed him?</li>
+                            <li>1. Do you know him/her?</li>
+                            <li>2. Does he/she know you?</li>
+                            <li>3. Have you informed him/her?</li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 17: Virtual CV & Video -->
         <div class="slide">
             <div class="max-w-7xl mx-auto w-full h-full flex flex-col justify-center">
-                <h2 class="text-6xl font-heading mb-6 text-center">VIRTUAL PRESENCE</h2>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-                    <!-- BRANDING & QR CARD -->
                     <div class="glass-panel p-10 text-center flex flex-col items-center justify-center h-full">
                         <div class="mb-8">
-                            <img id="img-hrp-logo-slide13" src="./assets/hrp_logo.png" alt="HR Perception" class="w-32 h-32 object-contain mx-auto mb-4 bg-white rounded-xl shadow-md p-2">
-                            <h3 class="text-5xl font-bold text-blue-900 font-heading">HR Perception - HRP</h3>
+                            <img id="img-hrp-logo-slide17" src="./assets/hrp_logo.png" alt="HR Perception" class="w-32 h-32 object-contain mx-auto mb-4 bg-white rounded-xl shadow-md p-2" onerror="this.src='https://placehold.co/150x150?text=HRP'">
+                            <h3 class="text-3xl md:text-5xl font-bold text-blue-900 font-heading">HR Perception - HRP</h3>
                         </div>
                         <div class="w-24 h-1 bg-gradient-to-r from-blue-200 to-blue-400 mb-8 rounded"></div>
                         <div class="bg-white p-4 rounded-xl shadow-lg border border-slate-100 inline-block mb-6">
@@ -658,48 +647,45 @@
                         <p class="text-sm text-slate-400 mt-4 uppercase tracking-widest">Scan to Follow</p>
                     </div>
 
-                    <!-- VIDEO PLAYER SECTION -->
                     <div class="flex flex-col h-full">
                         <div class="glass-panel p-4 mb-6 flex-grow flex items-center bg-black/5">
                             <div class="bg-black rounded-lg w-full aspect-video flex items-center justify-center relative overflow-hidden group shadow-2xl">
-                                <video id="demo-video" class="w-full h-full object-cover hidden" controls src="./assets/video_resume.mp4"></video>
-                                <!-- Placeholder Content -->
-                                <div id="video-placeholder" class="text-center">
-                                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto backdrop-blur-sm group-hover:scale-110 transition duration-300 cursor-pointer">
-                                        <i class="fas fa-play text-4xl text-white pl-2"></i>
+                                <video id="demo-video" class="w-full h-full object-cover hidden" controls src="./assets/video_resume.mp4" onerror="this.style.display='none'; document.getElementById('video-placeholder').style.display='flex';"></video>
+                                <div id="video-placeholder" class="text-center absolute inset-0 flex items-center justify-center bg-slate-900 w-full h-full">
+                                    <div class="text-center">
+                                        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto backdrop-blur-sm group-hover:scale-110 transition duration-300 cursor-pointer mb-4">
+                                            <i class="fas fa-play text-4xl text-white pl-2"></i>
+                                        </div>
+                                        <p class="text-white font-bold">Video Resume Demo</p>
                                     </div>
-                                    <p class="text-white mt-6 font-bold text-xl tracking-wide">VIDEO RESUME</p>
-                                    <p class="text-slate-400 text-sm mt-2 font-mono">assets/video_resume.mp4</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="p-8 bg-white/80 rounded-xl shadow-lg border-l-8 border-orange-500">
-                            <h3 class="text-2xl font-bold text-orange-600 mb-2 font-heading">DUTIES vs. ACHIEVEMENTS</h3>
-                            <p class="text-xl text-slate-700">Don't just list what you were <span class="italic text-slate-500">supposed</span> to do. List what you <span class="font-bold text-blue-700 bg-blue-50 px-2 rounded">actually did</span>.</p>
+                            <h3 class="text-2xl font-bold text-orange-600 mb-2 font-heading">hr perception - hrp</h3>
+                            <p class="text-xl text-slate-700">Bangladesh's First Professional CV Writing Company</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 18: HR Perception Social -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center text-center">
+            <div class="flex flex-col items-center justify-center text-center w-full">
                 <div class="w-32 h-32 bg-black text-yellow-400 flex items-center justify-center font-bold text-4xl rounded-full mb-8 border-8 border-yellow-400 shadow-xl">HRP</div>
-                <h2 class="text-6xl font-bold text-slate-900 mb-8">HR Perception - HRP</h2>
-                <div class="flex gap-6 mb-12">
+                <h2 class="text-5xl md:text-6xl font-bold text-slate-900 mb-8">HR Perception - HRP</h2>
+                <div class="flex flex-col md:flex-row gap-6 mb-12">
                     <a class="px-8 py-4 bg-blue-600 text-white rounded-lg text-2xl font-bold shadow hover:scale-105 transition">Facebook</a>
                     <a class="px-8 py-4 bg-red-600 text-white rounded-lg text-2xl font-bold shadow hover:scale-105 transition">YouTube</a>
                     <a class="px-8 py-4 bg-blue-500 text-white rounded-lg text-2xl font-bold shadow hover:scale-105 transition">LinkedIn</a>
                 </div>
-                <p class="text-3xl text-slate-500 font-light" style="font-size: 34px;">Like & Subscribe for Career Tips</p>
+                <p class="text-3xl text-slate-500 font-light">Like & Subscribe for Career Tips</p>
             </div>
         </div>
 
-        <!-- Slide 19: 7 Skills -->
         <div class="slide">
-            <h2 class="text-6xl text-center font-heading mb-16">7 SKILLS FOR SUCCESS</h2>
+            <h2 class="text-5xl md:text-6xl text-center font-heading mb-16">7 SKILLS FOR SUCCESS</h2>
             <div class="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto">
                 <span class="px-8 py-4 bg-white shadow-lg rounded-full text-blue-800 font-bold text-2xl border-2 border-blue-200">Communication</span>
                 <span class="px-8 py-4 bg-white shadow-lg rounded-full text-blue-800 font-bold text-2xl border-2 border-blue-200">Teamwork</span>
@@ -711,81 +697,85 @@
             </div>
         </div>
 
-        <!-- Slide 20: Job App Intro -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center h-full bg-slate-900 text-white absolute inset-0">
-                <div class="video-bg-container" id="job-app-video-bg"></div>
-                <h1 class="text-9xl font-heading mb-6 relative z-10">MODULE 02</h1>
-                <h2 class="text-5xl font-light text-blue-300 uppercase tracking-widest relative z-10">Job Application Techniques</h2>
+            <div class="flex flex-col items-center justify-center h-full bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white absolute inset-0">
+                 <div class="absolute inset-0 opacity-20">
+                     <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 40px 40px;"></div>
+                 </div>
+                <h1 class="text-7xl md:text-9xl font-heading mb-6 relative z-10 text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-white drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]">MODULE 02</h1>
+                <div class="w-32 h-2 bg-orange-500 mb-8 relative z-10"></div>
+                <h2 class="text-3xl md:text-5xl font-light text-blue-100 uppercase tracking-widest relative z-10 text-center">Job Application Techniques</h2>
             </div>
         </div>
 
-        <!-- Slide 21: Ways to Apply -->
         <div class="slide">
-            <h2 class="text-6xl text-center font-heading mb-16">WAYS TO APPLY</h2>
-            <div class="max-w-4xl mx-auto space-y-4">
+            <h2 class="text-5xl md:text-6xl text-center font-heading mb-16">WAYS TO APPLY</h2>
+            <div class="max-w-4xl mx-auto space-y-4 w-full">
                 <div class="group flex items-center p-6 bg-white shadow-lg rounded-xl hover:bg-blue-600 hover:text-white transition cursor-pointer">
                     <span class="text-4xl font-bold text-blue-200 mr-6 group-hover:text-blue-400">01</span>
-                    <span class="text-3xl font-bold">Online Job Portals (Bdjobs)</span>
+                    <span class="text-2xl md:text-3xl font-bold">Online Job Portals (Bdjobs)</span>
                 </div>
                 <div class="group flex items-center p-6 bg-white shadow-lg rounded-xl hover:bg-blue-600 hover:text-white transition cursor-pointer">
                     <span class="text-4xl font-bold text-blue-200 mr-6 group-hover:text-blue-400">02</span>
-                    <span class="text-3xl font-bold">Email Application</span>
+                    <span class="text-2xl md:text-3xl font-bold">Email Application</span>
                 </div>
                 <div class="group flex items-center p-6 bg-white shadow-lg rounded-xl hover:bg-blue-600 hover:text-white transition cursor-pointer">
                     <span class="text-4xl font-bold text-blue-200 mr-6 group-hover:text-blue-400">03</span>
-                    <span class="text-3xl font-bold">Hardcopy / Walk-in</span>
+                    <span class="text-2xl md:text-3xl font-bold">Hardcopy / Walk-in</span>
                 </div>
                 <div class="group flex items-center p-6 bg-white shadow-lg rounded-xl hover:bg-blue-600 hover:text-white transition cursor-pointer">
                     <span class="text-4xl font-bold text-blue-200 mr-6 group-hover:text-blue-400">04</span>
-                    <span class="text-3xl font-bold">LinkedIn & Networking</span>
+                    <span class="text-2xl md:text-3xl font-bold">LinkedIn & Networking</span>
+                </div>
+                <div class="group flex items-center p-6 bg-white shadow-lg rounded-xl hover:bg-blue-600 hover:text-white transition cursor-pointer">
+                    <span class="text-4xl font-bold text-blue-200 mr-6 group-hover:text-blue-400">05</span>
+                    <span class="text-2xl md:text-3xl font-bold">Company Website</span>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 22: Bdjobs -->
         <div class="slide">
-            <div class="grid grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
-                <div>
-                    <h2 class="text-8xl font-heading text-red-600 font-bold tracking-tighter">Bdjobs</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 items-center max-w-7xl mx-auto w-full">
+                <div class="flex flex-col items-center justify-center p-12 bg-white rounded-xl shadow-lg border border-slate-200">
+                     <div class="bdjobs-logo-text text-5xl md:text-7xl">bdjobs<span>.com</span></div>
+                     <p class="text-slate-500 mt-4 text-xl font-bold text-center">Largest Job Site in Bangladesh</p>
                 </div>
-                <div class="space-y-4 text-2xl text-slate-800 font-medium">
-                    <p class="border-b border-slate-300 pb-2" style="font-family: Inter, sans-serif; font-size: 28px;">1. Keep it Standard</p>
-                    <p class="border-b border-slate-300 pb-2" style="font-family: Inter, sans-serif; font-size: 28px;">2. Update Regularly</p>
-                    <p class="border-b border-slate-300 pb-2" style="font-family: Inter, sans-serif; font-size: 28px;">3. Use Mobile App</p>
-                    <p class="border-b border-slate-300 pb-2" style="font-size: 28px; font-family: Inter, sans-serif;">4. Customize Search</p>
-                    <p class="border-b border-slate-300 pb-2" style="font-size: 28px; font-family: Inter, sans-serif;">5. Remove Present Salary</p>
-                    <p class="" style="font-size: 28px; font-family: Inter, sans-serif;">6. Read Job Carefully</p>
+                <div class="space-y-4 text-2xl text-slate-800 font-bold">
+                    <p class="border-b border-slate-300 pb-2">1. Keep it Standard</p>
+                    <p class="border-b border-slate-300 pb-2">2. Update Regularly</p>
+                    <p class="border-b border-slate-300 pb-2">3. Use Mobile App</p>
+                    <p class="border-b border-slate-300 pb-2">4. Customize Search</p>
+                    <p class="border-b border-slate-300 pb-2">5. Remove Present Salary</p>
+                    <p class="">6. Read Job Carefully</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 23: Email Etiquette -->
         <div class="slide">
-            <h2 class="text-6xl font-heading mb-12 text-center text-blue-800">EMAIL ETIQUETTE</h2>
-            <div class="glass-panel p-16 max-w-6xl mx-auto grid grid-cols-2 gap-12">
+            <h2 class="text-5xl md:text-6xl font-heading mb-12 text-center text-blue-800">EMAIL ETIQUETTE</h2>
+            <div class="glass-panel p-8 md:p-16 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 w-full">
                 <div class="flex flex-col justify-center">
                     <div class="bg-white p-6 rounded-lg shadow-inner mb-4 border border-slate-200">
-                        <div class="text-sm text-slate-400 mb-1" style="font-size: 20px;">Subject:</div>
-                        <div class="font-bold text-slate-800" style="font-size: 20px;">Application for the position of [Role]</div>
+                        <div class="text-sm text-slate-400 mb-1 text-xl">Subject:</div>
+                        <div class="font-bold text-slate-800 text-xl">Application for the position of [Role]</div>
                     </div>
                     <div class="bg-white p-6 rounded-lg shadow-inner h-40 border border-slate-200">
-                        <div class="text-sm text-slate-400 mb-1" style="font-size: 20px;">Body:</div>
-                        <div class="text-slate-600" style="font-size: 19px;">Dear Hiring Manager,<br><br>Please accept this letter and the attached CV...</div>
+                        <div class="text-sm text-slate-400 mb-1 text-xl">Body:</div>
+                        <div class="text-slate-600 text-lg">Dear Hiring Manager,<br><br>Please accept this letter and the attached CV...</div>
                     </div>
                 </div>
-                <ul class="space-y-6 text-2xl text-slate-700 flex flex-col justify-center">
-                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10"></i> Subject Must be Relevant</li>
-                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10"></i> Professional Email ID</li>
-                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10"></i> Cover Letter as Body</li>
-                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10"></i> Attach PDF CV</li>
+                <ul class="space-y-6 text-xl md:text-2xl text-slate-700 flex flex-col justify-center">
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10 flex-shrink-0"></i> Subject Must be Relevant</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10 flex-shrink-0"></i> Professional Email ID</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10 flex-shrink-0"></i> Cover Letter as Body</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10 flex-shrink-0"></i> Attach PDF CV</li>
+                    <li class="flex items-center"><i class="fas fa-check-circle text-green-500 w-10 flex-shrink-0"></i> Appropriate Signature</li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 24: Quiz 3 -->
         <div class="slide">
-            <div class="glass-panel p-16 max-w-5xl mx-auto text-center border-4 border-blue-400">
+            <div class="glass-panel p-8 md:p-16 max-w-5xl mx-auto text-center border-4 border-blue-400 w-full">
                 <h2 class="text-5xl text-blue-600 font-bold mb-10">TRUE OR FALSE?</h2>
                 <p class="text-3xl text-slate-800 mb-12 font-bold">"Bdjobs is a social media application for searching desired Job."</p>
                 <div class="flex justify-center gap-12">
@@ -795,28 +785,28 @@
             </div>
         </div>
 
-        <!-- Slide 25: Hardcopy -->
         <div class="slide">
-            <div class="max-w-5xl mx-auto text-center">
-                <i class="fas fa-print text-9xl text-slate-300 mb-8"></i>
-                <h2 class="text-6xl font-heading mb-12">HARDCOPY SUBMISSION</h2>
-                <div class="bg-white p-12 rounded-xl shadow-xl text-left inline-block w-full">
-                    <div class="space-y-6 text-2xl text-slate-700">
-                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold">1</span> Print CV & Cover Letter Separately</p>
-                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold">2</span> Attach Cover Letter in front</p>
-                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold">3</span> Sign Your Cover Letter</p>
-                        <p class="flex items-center font-bold text-blue-600 bg-blue-50 p-4 rounded-lg"><span class="w-8 h-8 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center mr-4 text-sm font-bold">4</span> Mention Position Name on Envelope</p>
+            <div class="max-w-5xl mx-auto text-center w-full">
+                <i class="fas fa-print text-6xl md:text-9xl text-slate-300 mb-8"></i>
+                <h2 class="text-5xl md:text-6xl font-heading mb-12">HARDCOPY SUBMISSION</h2>
+                <div class="bg-white p-8 md:p-12 rounded-xl shadow-xl text-left inline-block w-full">
+                    <div class="space-y-6 text-xl md:text-2xl text-slate-700">
+                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold flex-shrink-0">1</span> Print CV & Cover Letter Separately</p>
+                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold flex-shrink-0">2</span> Attach Cover Letter in front</p>
+                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold flex-shrink-0">3</span> Attach Supporting Documents</p>
+                        <p class="flex items-center"><span class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center mr-4 text-sm font-bold flex-shrink-0">4</span> Sign Your Cover Letter</p>
+                        <p class="flex items-center font-bold text-blue-600 bg-blue-50 p-4 rounded-lg"><span class="w-8 h-8 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center mr-4 text-sm font-bold flex-shrink-0">5</span> Mention Position Name on Envelope</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 26: LinkedIn -->
         <div class="slide">
-            <div class="max-w-5xl mx-auto text-center">
-                <i class="fab fa-linkedin text-[8rem] text-blue-700 mb-8"></i>
-                <h2 class="text-6xl font-heading mb-12">LINKEDIN STRATEGY</h2>
-                <ul class="text-3xl space-y-6 inline-block text-left bg-white/50 p-10 rounded-xl">
+            <div class="max-w-5xl mx-auto text-center w-full">
+                <i class="fab fa-linkedin text-[5rem] md:text-[8rem] text-blue-700 mb-8"></i>
+                <h2 class="text-5xl md:text-6xl font-heading mb-12">LINKEDIN STRATEGY</h2>
+                <ul class="text-xl md:text-3xl space-y-6 inline-block text-left bg-white/50 p-10 rounded-xl w-full">
+                    <li class="flex items-center"><i class="fas fa-angle-right text-blue-600 mr-4 font-bold"></i> Keep it Standard</li>
                     <li class="flex items-center"><i class="fas fa-angle-right text-blue-600 mr-4 font-bold"></i> Be "Open for Job Opportunities"</li>
                     <li class="flex items-center"><i class="fas fa-angle-right text-blue-600 mr-4 font-bold"></i> Connect with Relevant People</li>
                     <li class="flex items-center"><i class="fas fa-angle-right text-blue-600 mr-4 font-bold"></i> Maintain Professional Relationships</li>
@@ -825,11 +815,10 @@
             </div>
         </div>
 
-        <!-- Slide 27: Quiz 4 -->
         <div class="slide">
-            <div class="glass-panel p-16 max-w-5xl mx-auto text-center">
+            <div class="glass-panel p-8 md:p-16 max-w-5xl mx-auto text-center w-full">
                 <p class="text-3xl text-slate-800 mb-12 font-bold">Which format of Cover Letter should we send via email?</p>
-                <div class="grid grid-cols-3 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <button onclick="checkAnswer(this, false)" class="quiz-btn p-8 bg-white rounded-xl shadow-lg font-bold text-2xl text-slate-600 transition-all">1. Word</button>
                     <button onclick="checkAnswer(this, true)" data-correct="true" class="quiz-btn p-8 bg-white rounded-xl shadow-lg font-bold text-2xl text-slate-600 transition-all">2. PDF</button>
                     <button onclick="checkAnswer(this, false)" class="quiz-btn p-8 bg-white rounded-xl shadow-lg font-bold text-2xl text-slate-600 transition-all">3. None (Body Text)</button>
@@ -837,46 +826,42 @@
             </div>
         </div>
 
-        <!-- Slide 28: Company Website -->
         <div class="slide">
-            <div class="flex items-center justify-center gap-16 max-w-7xl mx-auto">
-                <i class="fas fa-globe text-[10rem] text-slate-300"></i>
-                <div>
-                    <h2 class="text-6xl font-heading mb-8">COMPANY WEBSITE</h2>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-16 max-w-7xl mx-auto w-full">
+                <i class="fas fa-globe text-[8rem] md:text-[10rem] text-slate-300"></i>
+                <div class="text-center md:text-left">
+                    <h2 class="text-5xl md:text-6xl font-heading mb-8">COMPANY WEBSITE</h2>
                     <ul class="space-y-4 text-3xl text-slate-700">
-                        <li class="" style="font-size: 36px; color: rgb(0, 0, 0);">1. Fill Form Appropriately</li>
-                        <li class="" style="font-size: 36px; color: rgb(0, 0, 0);">2. Have a Good Summary</li>
-                        <li class="" style="font-size: 36px; color: rgb(0, 0, 0);">3. Proper Softcopy of Photo</li>
-                        <li class="" style="font-size: 36px; text-align: left; color: rgb(0, 0, 0);">4. Proper Softcopy of CV</li>
+                        <li>1. Fill Form Appropriately</li>
+                        <li>2. Have a Good Summary</li>
+                        <li>3. Proper Softcopy of Photo</li>
+                        <li>4. Proper Softcopy of CV</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 29: Interview Intro -->
         <div class="slide">
-            <div class="text-center">
-                <div class="text-[12rem] font-bold text-slate-200 mb-4 leading-none select-none" style="font-size: 27px;"><br></div>
-                <h2 class="text-7xl font-heading text-slate-900" style="font-size: 98px;">JOB INTERVIEW?</h2>
-                <h1 class="text-[10rem] font-bold text-orange-600 mt-6 anim-pulse leading-none font-heading" style="font-size: 200px;">FACE IT!</h1>
+            <div class="text-center relative">
+                <h2 class="text-7xl font-heading text-slate-900 md:text-8xl">JOB INTERVIEW?</h2>
+                <h1 class="text-[5rem] md:text-[10rem] font-bold text-orange-600 mt-6 anim-pulse leading-none font-heading">FACE IT!</h1>
+                <div class="absolute -bottom-40 left-1/2 transform -translate-x-1/2 text-slate-800 font-bold font-heading text-4xl">Module 3</div>
             </div>
         </div>
 
-        <!-- Slide 30: Board Room -->
         <div class="slide">
-            <div class="max-w-7xl mx-auto text-center">
-                <h2 class="text-7xl heading-font mb-12">THE BOARD ROOM</h2>
+            <div class="max-w-7xl mx-auto text-center w-full">
+                <h2 class="text-5xl md:text-7xl heading-font mb-12">THE BOARD ROOM</h2>
                 <div class="bg-white p-4 shadow-2xl transform rotate-1 border-4 border-slate-200">
-                    <img src="./assets/interview_panel.jpg" class="w-full grayscale opacity-80" onerror="this.src='https://placehold.co/1000x500/e2e8f0/1e293b?text=Interview+Panel+Visual'">
+                    <img src="./assets/interview_panel.jpg" class="w-full grayscale opacity-80 max-h-[500px] object-cover" onerror="this.src='https://placehold.co/1000x500/e2e8f0/1e293b?text=Interview+Panel+Visual'">
                 </div>
             </div>
         </div>
 
-        <!-- Slide 31: Job Description -->
         <div class="slide">
-            <div class="max-w-6xl mx-auto text-center">
-                <h2 class="text-7xl heading-font mb-16">JOB DESCRIPTION</h2>
-                <div class="grid grid-cols-2 gap-12">
+            <div class="max-w-6xl mx-auto text-center w-full">
+                <h2 class="text-5xl md:text-7xl heading-font mb-16">JOB DESCRIPTION</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     <div class="glass-panel p-16 hover:bg-blue-50 transition cursor-pointer">
                         <h3 class="text-5xl font-bold text-blue-900">COMMON</h3>
                     </div>
@@ -887,9 +872,8 @@
             </div>
         </div>
 
-        <!-- Slide 32: Prepare -->
         <div class="slide">
-            <div class="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto text-4xl font-bold text-white">
+            <div class="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto text-2xl md:text-4xl font-bold text-white">
                 <div class="p-10 bg-blue-600 rounded-xl shadow-lg">READ</div>
                 <div class="p-10 bg-blue-700 rounded-xl shadow-lg">STUDY</div>
                 <div class="p-10 bg-blue-800 rounded-xl shadow-lg">PRACTICE</div>
@@ -897,24 +881,22 @@
             </div>
         </div>
 
-        <!-- Slide 33: Know Company -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center">
-                <i class="far fa-building text-[10rem] text-slate-300 mb-10" style="color: rgb(0, 0, 0);"></i>
-                <h2 class="text-7xl heading-font">KNOW THE COMPANY?</h2>
+            <div class="flex flex-col items-center justify-center text-center">
+                <i class="far fa-building text-[8rem] md:text-[10rem] text-slate-300 mb-10 text-black"></i>
+                <h2 class="text-5xl md:text-7xl heading-font">KNOW THE COMPANY?</h2>
             </div>
         </div>
 
-        <!-- Slide 34: Research -->
         <div class="slide">
-            <div class="grid grid-cols-2 gap-16 max-w-7xl mx-auto items-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-7xl mx-auto items-center w-full">
                 <div class="text-center">
-                    <i class="fab fa-google text-[12rem] text-black animate-pulse" style="color: rgb(0, 0, 0);"></i>
-                    <h3 class="text-5xl font-heading mt-8 text-slate-400" style="color: rgb(0, 0, 0);">SEARCH THEM</h3>
+                    <i class="fab fa-google text-[8rem] md:text-[12rem] text-black animate-pulse"></i>
+                    <h3 class="text-4xl md:text-5xl font-heading mt-8 text-slate-400 text-black">SEARCH THEM</h3>
                 </div>
                 <div class="glass-panel p-10">
                     <h3 class="text-3xl font-bold text-blue-800 mb-6">WHAT TO KNOW:</h3>
-                    <ul class="space-y-4 text-2xl font-bold text-slate-600">
+                    <ul class="space-y-4 text-xl md:text-2xl font-bold text-slate-600">
                         <li class="p-3 bg-white rounded shadow-sm">🚀 Products & Services</li>
                         <li class="p-3 bg-white rounded shadow-sm">🌍 CSR Activities</li>
                         <li class="p-3 bg-white rounded shadow-sm">📅 History & Recent Events</li>
@@ -924,95 +906,101 @@
             </div>
         </div>
 
-        <!-- Slide 35: Know Yourself -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center h-full">
-                <h1 class="text-[8rem] heading-font text-slate-900 text-center leading-none">KNOW<br>YOURSELF!</h1>
-            </div>
-        </div>
-
-        <!-- Slide 36: SWOT -->
-        <div class="slide">
-            <h2 class="text-7xl text-center font-heading mb-10">KNOW THYSELF</h2>
-            <div class="grid grid-cols-2 gap-8 max-w-5xl mx-auto w-full">
-                <div class="bg-green-100 p-10 rounded-2xl text-center hover:shadow-xl transition">
-                    <h3 class="text-4xl font-bold text-green-800" style="font-size: 44px;">STRENGTHS</h3>
-                    <p class="mt-2 text-green-600" style="font-size: 24px;">What you are good at</p>
-                </div>
-                <div class="bg-red-100 p-10 rounded-2xl text-center hover:shadow-xl transition">
-                    <h3 class="text-4xl font-bold text-red-800" style="font-size: 44px;">WEAKNESSES</h3>
-                    <p class="mt-2 text-red-600" style="font-size: 24px;">Areas to improve</p>
-                </div>
-                <div class="bg-blue-100 p-10 rounded-2xl text-center hover:shadow-xl transition">
-                    <h3 class="text-4xl font-bold text-blue-800" style="font-size: 44px;">HARD SKILLS</h3>
-                    <p class="mt-2 text-blue-600" style="font-size: 24px;">Technical ability</p>
-                </div>
-                <div class="bg-orange-100 p-10 rounded-2xl text-center hover:shadow-xl transition">
-                    <h3 class="text-4xl font-bold text-orange-800" style="font-size: 44px;">SOFT SKILLS</h3>
-                    <p class="mt-2 text-orange-600" style="font-size: 24px;">People skills</p>
+            <div class="flex flex-col items-center justify-center h-full w-full gap-8">
+                <h1 class="text-6xl md:text-[8rem] heading-font text-slate-900 text-center leading-none">
+                    KNOW<br>
+                </h1>
+                <div class="text-6xl md:text-[8rem] text-orange-500 font-bold font-heading text-center leading-none">
+                    YOURSELF!
                 </div>
             </div>
         </div>
 
-        <!-- Slide 37: Mindset -->
+        <div class="slide">
+            <h2 class="text-5xl md:text-7xl text-center font-heading mb-10">KNOW THYSELF</h2>
+            <div class="grid grid-cols-2 gap-8 max-w-6xl mx-auto w-full mb-10">
+                <div class="bg-green-100 p-8 rounded-2xl text-center hover:shadow-xl transition">
+                    <h3 class="text-2xl md:text-3xl font-bold text-green-800">STRENGTHS</h3>
+                </div>
+                <div class="bg-red-100 p-8 rounded-2xl text-center hover:shadow-xl transition">
+                    <h3 class="text-2xl md:text-3xl font-bold text-red-800">WEAKNESSES</h3>
+                </div>
+                <div class="bg-blue-100 p-8 rounded-2xl text-center hover:shadow-xl transition">
+                    <h3 class="text-2xl md:text-3xl font-bold text-blue-800">HARD SKILLS</h3>
+                </div>
+                <div class="bg-orange-100 p-8 rounded-2xl text-center hover:shadow-xl transition">
+                    <h3 class="text-2xl md:text-3xl font-bold text-orange-800">SOFT SKILLS</h3>
+                </div>
+            </div>
+             <div class="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-8">
+                 <div class="glass-panel p-6">
+                     <h3 class="text-3xl font-bold text-slate-700 mb-2">TIMELINE</h3>
+                     <ul class="text-xl text-slate-600 space-y-1 font-bold">
+                         <li>1. Know Your Past</li>
+                         <li>2. Know Your Present</li>
+                         <li>3. Know Your Future</li>
+                     </ul>
+                 </div>
+                 <div class="glass-panel p-6 bg-yellow-50 border-yellow-200">
+                     <h3 class="text-3xl font-bold text-yellow-800 mb-2"><i class="fas fa-trophy mr-2"></i>ACHIEVEMENTS</h3>
+                     <p class="text-2xl text-slate-600 font-bold">List your major wins here.</p>
+                 </div>
+             </div>
+        </div>
+
         <div class="slide">
             <div class="flex flex-col items-center justify-center h-full relative">
-                <!-- Background Blob FX -->
                 <div class="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-                    <div class="w-[30rem] h-[30rem] bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
-                    <div class="w-[30rem] h-[30rem] bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
+                    <div class="w-[20rem] h-[20rem] md:w-[30rem] md:h-[30rem] bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob"></div>
+                    <div class="w-[20rem] h-[20rem] md:w-[30rem] md:h-[30rem] bg-orange-400 rounded-full mix-blend-multiply filter blur-3xl animate-blob animation-delay-2000"></div>
                 </div>
 
-                <!-- Interactive Text -->
                 <div class="z-10 text-center cursor-pointer group anim-pulse" onclick="this.classList.add('anim-pulse')">
-                    <h1 class="text-[8rem] heading-font font-bold mb-4 tracking-tighter hover:scale-105 transition duration-500 leading-none">
+                    <h1 class="text-6xl md:text-[8rem] heading-font font-bold mb-4 tracking-tighter hover:scale-105 transition duration-500 leading-none">
                         <span class="text-blue-800 reveal-left inline-block">SET</span><br>
                         <span class="text-orange-500 reveal-right inline-block">YOUR MIND!</span>
                     </h1>
-                    <p class="text-slate-400 text-xl tracking-[0.5em] uppercase opacity-0 group-hover:opacity-100 transition duration-500"><br></p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 38: Opportunity -->
         <div class="slide">
-            <div class="max-w-5xl mx-auto text-center">
-                <h2 class="text-6xl heading-font mb-10">NOTHING TO LOSE</h2>
+            <div class="max-w-5xl mx-auto text-center w-full">
+                <h2 class="text-5xl md:text-6xl heading-font mb-10">NOTHING TO LOSE</h2>
                 <div class="glass-panel p-16">
-                    <h3 class="text-5xl font-bold text-blue-600 mb-8" style="font-size: 64px;">OPPORTUNITY</h3>
-                    <p class="text-3xl text-slate-700 mb-4">■ Interview Experience</p>
-                    <p class="text-3xl text-slate-700" style="font-size: 30px;">■ Self Exposure</p><p class="text-3xl text-slate-700" style="font-size: 30px; width: 301px; height: 15px;"><br></p><p class="text-3xl text-slate-700" style="font-size: 36px; width: 322px; height: 51px;">■ Job</p>
+                    <h3 class="text-5xl md:text-[64px] font-bold text-blue-600 mb-8">OPPORTUNITY</h3>
+                    <p class="text-3xl text-slate-700 mb-4 font-bold">■ Interview Experience</p>
+                    <p class="text-3xl text-slate-700 font-bold mb-4">■ Self Exposure</p>
+                    <p class="text-4xl text-slate-700 font-bold">■ Job</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 39: Wearing -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center h-full">
+            <div class="flex flex-col items-center justify-center h-full text-center">
                 <i class="fas fa-tshirt text-[8rem] text-slate-300 mb-10"></i>
-                <h2 class="text-7xl heading-font">INTERVIEW WEARING</h2>
+                <h2 class="text-5xl md:text-7xl heading-font text-blue-700">INTERVIEW ATTIRE</h2>
             </div>
         </div>
 
-        <!-- Slide 40: Dress Code -->
         <div class="slide">
-            <div class="max-w-6xl mx-auto space-y-8">
-                <div class="p-10 bg-red-50 border-l-8 border-red-500 text-3xl text-red-900 rounded-r-xl">
+            <div class="max-w-6xl mx-auto space-y-8 w-full">
+                <div class="p-10 bg-red-50 border-l-8 border-red-500 text-2xl md:text-3xl text-red-900 rounded-r-xl">
                     <i class="fas fa-times-circle text-red-500 mr-4"></i> No Casual Dress
                 </div>
-                <div class="p-10 bg-red-50 border-l-8 border-red-500 text-3xl text-red-900 rounded-r-xl">
+                <div class="p-10 bg-red-50 border-l-8 border-red-500 text-2xl md:text-3xl text-red-900 rounded-r-xl">
                     <i class="fas fa-times-circle text-red-500 mr-4"></i> No Jewelry or Accessories
                 </div>
-                <div class="p-10 bg-green-50 border-l-8 border-green-500 text-3xl font-bold text-green-900 rounded-r-xl shadow-md">
+                <div class="p-10 bg-green-50 border-l-8 border-green-500 text-2xl md:text-3xl font-bold text-green-900 rounded-r-xl shadow-md">
                     <i class="fas fa-check-circle text-green-500 mr-4"></i> Make Sure You Are Comfortable
                 </div>
             </div>
         </div>
 
-        <!-- Slide 41: Dont's -->
         <div class="slide">
-            <h2 class="text-6xl heading-font text-center mb-16">DON'T BE...</h2>
-            <div class="grid grid-cols-2 gap-12 max-w-6xl mx-auto">
+            <h2 class="text-5xl md:text-6xl heading-font text-center mb-16">DON'T BE...</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto w-full">
                 <div class="glass-panel p-12 text-center text-red-600 font-bold text-4xl hover:bg-red-50 transition">BOOKISH</div>
                 <div class="glass-panel p-12 text-center text-red-600 font-bold text-4xl hover:bg-red-50 transition">NERVOUS</div>
                 <div class="glass-panel p-12 text-center text-red-600 font-bold text-4xl hover:bg-red-50 transition">RUDE</div>
@@ -1020,115 +1008,113 @@
             </div>
         </div>
 
-        <!-- Slide 42: Recap -->
         <div class="slide">
             <div class="text-center">
-                <h2 class="text-5xl heading-font mb-6 text-slate-500 tracking-widest" style="font-size: 67px;">RECAP</h2>
-                <h3 class="text-7xl font-bold text-blue-600 mb-6" style="font-size: 94px;">VIRTUAL CV & SKILLS</h3>
-                <p class="mt-8 text-3xl text-slate-400" style="color: rgb(219, 0, 55); font-weight: bold; font-size: 44px;">Review your digital presence.</p>
+                <h2 class="text-5xl heading-font mb-6 text-slate-500 tracking-widest md:text-[67px]">RECAP</h2>
+                <h3 class="text-6xl font-bold text-blue-600 mb-6 md:text-[94px]">VIRTUAL CV & SKILLS</h3>
+                <p class="mt-8 text-3xl md:text-[44px] text-red-600 font-bold">Review your digital presence.</p>
             </div>
         </div>
 
-        <!-- Slide 43: Win It -->
         <div class="slide">
             <div class="flex flex-col items-center justify-center h-full">
-                <i class="fas fa-trophy text-[10rem] text-yellow-400 mb-10 anim-pulse"></i>
-                <h1 class="text-[9rem] heading-font text-slate-900">WIN IT!</h1>
+                <i class="fas fa-trophy text-[8rem] md:text-[10rem] text-yellow-400 mb-10 anim-pulse"></i>
+                <h1 class="text-[6rem] md:text-[9rem] heading-font text-slate-900">WIN IT!</h1>
             </div>
         </div>
 
-        <!-- Slide 44: First Impression -->
         <div class="slide">
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-6xl heading-font mb-12 border-b-2 border-slate-200 pb-6 text-center">POSITIVE FIRST IMPRESSION</h2>
-                <ul class="space-y-8 text-4xl text-slate-800">
+            <div class="max-w-5xl mx-auto w-full">
+                <h2 class="text-5xl md:text-6xl heading-font mb-12 border-b-2 border-slate-200 pb-6 text-center">POSITIVE FIRST IMPRESSION</h2>
+                <ul class="space-y-8 text-3xl md:text-4xl text-slate-800">
                     <li class="flex items-center"><i class="fas fa-dot-circle text-blue-500 mr-6 text-2xl"></i> Be Polite to Everyone</li>
                     <li class="flex items-center"><i class="fas fa-dot-circle text-blue-500 mr-6 text-2xl"></i> Greet Perfectly</li>
-                    <li class="flex items-center"><i class="fas fa-dot-circle text-blue-500 mr-6 text-2xl"></i> Entrance - Make it BOLD</li>
+                    <li class="flex items-center"><i class="fas fa-dot-circle text-blue-500 mr-6 text-2xl"></i> Entrance - Make it <span class="font-extrabold text-blue-800 ml-3">BOLD</span></li>
                 </ul>
             </div>
         </div>
 
-        <!-- Slide 45: Body Language -->
         <div class="slide">
-            <div class="grid grid-cols-2 gap-16 max-w-7xl mx-auto items-center">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-16 max-w-7xl mx-auto items-center w-full">
                 <div class="glass-panel p-16 text-center">
-                    <i class="fas fa-eye text-9xl text-blue-500 mb-6"></i>
-                    <h3 class="text-5xl font-bold font-heading">EYE CONTACT</h3>
+                    <i class="fas fa-peace text-8xl md:text-9xl text-blue-500 mb-6"></i>
+                    <h3 class="text-5xl font-bold font-heading">STAY CALM</h3>
                 </div>
-                <div class="space-y-8 text-4xl text-slate-700">
-                    <p class="flex items-center" style="font-weight: bold;"><span class="w-4 h-4 bg-slate-400 rounded-full mr-6"></span> Stay Calm</p>
-                    <p class="flex items-center" style="font-weight: bold;"><span class="w-4 h-4 bg-slate-400 rounded-full mr-6"></span> Control Body Movement</p>
-                    <p class="flex items-center" style="font-weight: bold;"><span class="w-4 h-4 bg-slate-400 rounded-full mr-6"></span> Listen Actively</p>
+                <div class="space-y-8 text-3xl md:text-4xl text-slate-700">
+                    <p class="flex items-center font-bold"><span class="w-4 h-4 bg-slate-400 rounded-full mr-6"></span> Eye Contact</p>
+                    <p class="flex items-center font-bold"><span class="w-4 h-4 bg-slate-400 rounded-full mr-6"></span> Control Body Movement</p>
+                    <p class="flex items-center font-bold"><span class="w-4 h-4 bg-slate-400 rounded-full mr-6"></span> Listen Actively</p>
                     <p class="text-red-500 font-bold flex items-center p-4 bg-red-50 rounded-lg"><i class="fas fa-ban mr-6"></i> No Fidgeting</p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 46: Practical -->
         <div class="slide">
             <div class="text-center max-w-5xl mx-auto">
-                <h2 class="text-7xl heading-font mb-10">BE PRACTICAL</h2>
-                <p class="text-4xl text-slate-600 mb-12 italic font-light" style="font-size: 40px; font-weight: bold; font-style: italic;">"Express yourself practically and logically."</p>
-                <div class="p-10 bg-blue-100 rounded-xl text-blue-900 font-bold text-3xl shadow-inner">
+                <h2 class="text-5xl md:text-7xl heading-font mb-10">BE PRACTICAL</h2>
+                <p class="text-3xl md:text-4xl text-slate-600 mb-12 italic font-light font-bold">"Express yourself practically and logically."</p>
+                <div class="p-10 bg-blue-100 rounded-xl text-blue-900 font-bold text-2xl md:text-3xl shadow-inner">
                     Tell your job life with EXAMPLES (Achievements)
                 </div>
             </div>
         </div>
 
-        <!-- Slide 47: Honest -->
         <div class="slide">
-            <div class="flex flex-col items-center justify-center gap-12 text-center">
-                <div class="text-5xl font-bold text-slate-800 border-b-4 border-slate-300 pb-4">EXPOSE AS TEAM PLAYER</div>
-                <div class="text-5xl font-bold text-green-600 border-b-4 border-green-300 pb-4">BE HONEST & TRUTHFUL</div>
-                <div class="text-5xl font-bold text-blue-600 border-b-4 border-blue-300 pb-4">BE STRAIGHT</div>
+            <div class="flex flex-col items-center justify-center gap-12 text-center w-full">
+                <div class="text-3xl md:text-5xl font-bold text-slate-800 border-b-4 border-slate-300 pb-4">EXPOSE AS TEAM PLAYER</div>
+                <div class="text-3xl md:text-5xl font-bold text-green-600 border-b-4 border-green-300 pb-4">BE HONEST & TRUTHFUL</div>
+                <div class="text-3xl md:text-5xl font-bold text-blue-600 border-b-4 border-blue-300 pb-4">BE STRAIGHT</div>
             </div>
         </div>
 
-        <!-- Slide 48: Avoid Questions -->
         <div class="slide">
-            <div class="glass-panel p-16 border-4 border-red-500 max-w-6xl mx-auto text-center">
-                <i class="fas fa-ban text-8xl text-red-500 mb-10"></i>
-                <h2 class="text-5xl heading-font mb-10">AVOID SILLY QUESTIONS</h2>
-                <p class="text-4xl text-red-700 mb-4 font-serif italic" style="font-style: normal; font-weight: bold;">"Is this job very tough?"</p>
-                <p class="text-4xl text-red-700 font-serif italic" style="font-style: normal; font-weight: bold;">"What facilities will I get?"</p>
+            <div class="glass-panel p-8 md:p-16 border-4 border-red-500 max-w-6xl mx-auto text-center w-full">
+                <i class="fas fa-ban text-6xl md:text-8xl text-red-500 mb-10"></i>
+                <h2 class="text-4xl md:text-5xl heading-font mb-10">AVOID SILLY QUESTIONS</h2>
+                <p class="text-3xl md:text-4xl text-red-700 mb-4 font-bold italic">"Is this job very tough?"</p>
+                <p class="text-3xl md:text-4xl text-red-700 font-bold italic">"What facilities will I get?"</p>
             </div>
         </div>
 
-        <!-- Slide 49: Salary -->
         <div class="slide">
-            <div class="max-w-6xl mx-auto text-center">
-                <h2 class="text-6xl heading-font mb-16">SALARY EXPECTATION</h2>
-                <div class="grid grid-cols-3 gap-10">
-                    <div class="glass-panel p-10 hover:bg-white transition">
-                        <h3 class="font-bold text-3xl text-slate-700">KNOW THEM</h3>
+            <div class="max-w-6xl mx-auto text-center w-full">
+                <h2 class="text-5xl md:text-6xl heading-font mb-16">SALARY EXPECTATION</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="glass-panel p-8 hover:bg-white transition">
+                        <h3 class="font-bold text-2xl text-slate-700">KNOW THEM</h3>
                     </div>
-                    <div class="glass-panel p-10 hover:bg-white transition">
-                        <h3 class="font-bold text-3xl text-slate-700">KNOW MARKET</h3>
+                    <div class="glass-panel p-8 hover:bg-white transition">
+                        <h3 class="font-bold text-2xl text-slate-700">KNOW MARKET</h3>
                     </div>
-                    <div class="glass-panel p-10 hover:bg-white transition">
-                        <h3 class="font-bold text-3xl text-slate-700">KNOW THYSELF</h3>
+                    <div class="glass-panel p-8 hover:bg-white transition">
+                        <h3 class="font-bold text-2xl text-slate-700">KNOW THYSELF</h3>
                     </div>
                 </div>
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="glass-panel p-8 bg-blue-50">
+                        <h3 class="font-bold text-2xl text-blue-800">Understand the SITUATION</h3>
+                    </div>
+                     <div class="glass-panel p-8 bg-blue-50">
+                        <h3 class="font-bold text-2xl text-blue-800">Consider other ISSUES</h3>
+                    </div>
+                 </div>
             </div>
         </div>
 
-        <!-- Slide 50: Best of Luck -->
         <div class="slide">
             <div class="flex flex-col items-center justify-center h-full">
-                <h1 class="text-[9rem] heading-font text-green-600 anim-pulse text-center leading-none">BEST OF LUCK!</h1>
-                <p class="mt-8 text-4xl text-slate-500" style="font-weight: bold; color: rgb(70, 73, 78); font-size: 53px;">You are ready.</p>
+                <h1 class="text-6xl md:text-[9rem] heading-font text-green-600 anim-pulse text-center leading-none">BEST OF LUCK!</h1>
+                <p class="mt-8 text-3xl md:text-[53px] text-slate-500 font-bold">You are ready.</p>
             </div>
         </div>
 
-        <!-- Slide 51: End -->
         <div class="slide">
             <div class="flex flex-col items-center justify-center h-full text-center">
                 <div class="mb-10 w-40 h-40 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-7xl shadow-2xl anim-float">
                     <i class="fas fa-check"></i>
                 </div>
-                <h1 class="text-8xl font-heading text-slate-900 mb-8" style="font-size: 143px;">THANK YOU!</h1>
-                <div class="text-3xl text-slate-500 font-light tracking-widest uppercase">Department of Management</div>
+                <h1 class="text-6xl md:text-[143px] font-heading text-slate-900 mb-8 leading-none">THANK YOU!</h1>
+                <div class="text-2xl md:text-3xl text-slate-500 font-light tracking-widest uppercase">Department of Management</div>
                 <div class="mt-16">
                     <button onclick="goToSlide(0)" class="text-blue-600 font-bold text-2xl hover:text-blue-800 transition flex items-center gap-2">
                         <i class="fas fa-redo"></i> Restart Session
@@ -1139,7 +1125,6 @@
 
     </div>
 
-    <!-- Smart Navigation Zones -->
     <div class="nav-zone left" onclick="prevSlide()">
         <button class="nav-glass-btn">
             <i class="fas fa-chevron-left text-2xl"></i>
@@ -1161,7 +1146,6 @@
         const slides = document.querySelectorAll('.slide');
         const navRail = document.getElementById('nav-rail');
         const pageNum = document.getElementById('page-num');
-        // progressBar element removed
         const totalSlidesEl = document.getElementById('total-slides');
 
         let currentSlide = 0;
@@ -1211,7 +1195,6 @@
 
             // Branding Text Color Logic
             const brandingText = document.getElementById('branding-text');
-            // Dark slides indices: 4 (Slide 5), 19 (Slide 20)
             const darkSlides = [4, 19]; 
             
             if (brandingText) {
@@ -1226,8 +1209,6 @@
 
             // UI Updates
             pageNum.innerText = (currentSlide + 1).toString().padStart(2, '0');
-            // progressBar update removed
-
             updateRail();
         }
 
